@@ -7,6 +7,15 @@
 
 # Offline & Desktop Program
 
+> **Status (2026-08-23): the sync half is built; the shells are scaffolded, not functional.**
+> This program, [`offline-pos-options.md`](../offline-pos-options.md) and
+> [`packages/sync`](../../packages/sync/README.md) moved from the consumer repo
+> (`consumer/packages/sync`, `consumer/docs/todo/`) into the new `native-apps`
+> repo on 2026-08-23, and the per-product Electron shells were scaffolded under
+> [`apps/`](../../apps/README.md). Stubs at the old consumer locations redirect
+> here. Links into `../../../consumer/…` paths resolve against a full workspace
+> checkout, not against this repo alone.
+>
 > **Status (2026-08-20): the sync half is built, the host is not.**
 > [`packages/sync`](../../packages/sync/README.md) carries both the phase-1
 > pass-through bridge (per [`offline-pos-options.md` §13.7](../offline-pos-options.md#137-what-this-replaces))
@@ -16,7 +25,9 @@
 >
 > **The Electron shell remains unbuilt**, and the measurement that says so is
 > reproducible rather than remembered: a search of every `package.json` outside
-> `node_modules` returns zero `electron` matches (re-run 2026-08-20).
+> `node_modules` returns zero `electron` matches (re-run 2026-08-20; still true
+> 2026-08-23 - the scaffolded shells deliberately do not pin Electron yet, see
+> [apps/README.md](../../apps/README.md)).
 >
 > This program **does not reopen** [`offline-pos-options.md`](../offline-pos-options.md).
 > That document's §§1-5 and §10 are the working design and are treated here as
@@ -105,7 +116,7 @@ Recorded here so no document below reopens them.
 
 | # | Decision | Where it was taken |
 |---|---|---|
-| 1 | **One "Rutba Desktop" container hosting many apps**, not one installer per product. One install, one updater, one bridge, one replica, one signed-in session. | This program |
+| 1 | ~~**One "Rutba Desktop" container hosting many apps**~~ **Superseded 2026-08-23: one Electron shell per product** (`apps/pos-desktop`, `apps/mail-desktop`, `apps/studio-desktop`) over a shared `@rutba/shell-common`. Each product ships its own installer; the bridge, replica and session stay per-shell. | This program; superseded at the move to native-apps |
 | 2 | **The desktop IS the launcher.** Reuse `getAppCatalogGroups` / `rankByUsage` / `appUsage.js` from `pos-shared`; the app list comes from the server-owned catalogue. | [admin-console 01](../../../consumer/consumer/docs/todo/admin-console-program/01-app-catalogue-entitlements.md) |
 | 3 | **v1 bundles POS, Mail and Studio only.** | [offline-pos-options §12](../offline-pos-options.md#12-amendment-2026-08-13--one-engine-three-apps) |
 | 4 | **The Electron main process hosts the bridge** - no separate Windows service. _(Superseded 2026-08-17: the bridge runs in a `UtilityProcess` inside the Electron app, not the main process - [§13.1](../offline-pos-options.md#131-the-engine-runs-in-a-utilityprocess-not-the-main-process); the installer/lifecycle argument stands.)_ | [offline-pos-options §11](../offline-pos-options.md#11-amendment-2026-08-13--electron-hosts-the-bridge) |

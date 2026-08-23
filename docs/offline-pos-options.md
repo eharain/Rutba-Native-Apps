@@ -9,6 +9,21 @@
 
 _For roadmap [0.3 - Offline-first POS hardening](../../consumer/docs/todo/ROADMAP.md)._
 
+> ## Amendment - 2026-08-23
+>
+> This document, the offline-desktop program, and `packages/sync` moved from the
+> consumer repo into the new **`native-apps`** repo, and the desktop shells were
+> scaffolded there (`apps/pos-desktop`, `apps/mail-desktop`, `apps/studio-desktop`
+> over a shared `@rutba/shell-common`). Two things follow:
+>
+> 1. **The program's decision 1 is superseded.** One "Rutba Desktop" container
+>    hosting many apps becomes **one Electron shell per product**. The bridge
+>    still runs in a `UtilityProcess` (§13.1); what changes is that each shell
+>    hosts its own bridge instance on its own loopback port (4030/4031/4032).
+> 2. Consumer-side links into this document now land on redirect stubs at the
+>    old paths. Links out of this document into consumer paths carry a
+>    `consumer/` hop and resolve only in a full workspace checkout.
+
 > ## Amendment - 2026-08-13
 >
 > Two decisions postdate the 2026-08-08 design below. Both change **where the bridge
