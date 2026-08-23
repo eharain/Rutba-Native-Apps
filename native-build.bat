@@ -1,5 +1,5 @@
 @echo off
-REM ─────────────────────────────────────────────────────────────────────────
+REM -------------------------------------------------------------------------
 REM  Rutba native-apps - one-click build.
 REM
 REM    native-build            install workspaces (+ Electron on first run)
@@ -9,7 +9,7 @@ REM
 REM  Electron stays a deliberate install (it is a ~100 MB binary and the
 REM  scaffold is runnable without it) - but deliberate should not mean manual,
 REM  so this script does it on first run and remembers.
-REM ─────────────────────────────────────────────────────────────────────────
+REM -------------------------------------------------------------------------
 cd /d "%~dp0"
 
 if /i "%~1"=="test" (
@@ -19,7 +19,7 @@ if /i "%~1"=="test" (
 
 echo.
 echo  native-apps build
-echo  ─────────────────────────────────────────────
+echo  ---------------------------------------------
 call npm install --no-audit --no-fund
 if errorlevel 1 exit /b 1
 
