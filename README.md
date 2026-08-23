@@ -38,8 +38,28 @@ recorded amendment.
 - `@rutba/sync`: bridge phase 1 (pass-through proxy) done and verified; engine
   read + plan + apply done and verified. Bridge phases 2-4 (response cache, SQLite
   replica, outbox/replayer) are designed, not built.
-- Shells: scaffolded, not yet functional. Electron is declared but the shells do not
-  yet embed the bridge or load their apps.
+- Shells: scaffolded (window + pass-through bridge); offline behaviour lands with
+  bridge phases 2-4.
+
+## One-click build & run
+
+```bat
+native-build.bat                     :: install workspaces (+ Electron, first run)
+apps\rutba-pos-desktop\run.bat       :: POS shell:    web app :4002 + bridge :4030 + window
+apps\rutba-mail-desktop\run.bat      :: Mail shell:   web app :4021 + bridge :4031 + window
+apps\rutba-studio-desktop\run.bat    :: Studio shell: web app :4011 + bridge :4032 + window
+```
+
+Or from anywhere in the estate, the same convention as `dev.cmd` / `rutba.cmd`:
+
+```bat
+native-apps build | test | pos | mail | studio
+```
+
+A `run.bat` starts its web app (pointed at its own bridge via
+`NEXT_PUBLIC_API_URL`), then the Electron shell which hosts the bridge in a
+UtilityProcess. Prerequisite: the consumer API up (`api/core` on :4020) —
+`consumer\devkit\dev-start-core.bat` covers it.
 
 ## Tests
 

@@ -18,20 +18,22 @@ bridges are never deployed services, same rule as the bridge's own README.
 
 ## Dev loop
 
-Electron is intentionally **not pinned** in this scaffold. From the repo root:
+One click per shell:
 
-```bash
-npm install                    # links the workspaces
-npm install -D electron        # pins the current release into the root package.json
+```bat
+rutba-pos-desktop\run.bat     :: web app :4002 + bridge :4030 + window
+rutba-mail-desktop\run.bat    :: web app :4021 + bridge :4031 + window
+rutba-studio-desktop\run.bat  :: web app :4011 + bridge :4032 + window
 ```
 
-Then, with the consumer API up (`api/core` on :4020) and the web app running
-on its dev port with `NEXT_PUBLIC_API_URL` pointed at the bridge
-(`http://127.0.0.1:4030/api` for POS):
+`run.bat` (via [`scripts\run-shell.bat`](scripts/run-shell.bat)) starts the web
+app on its dev port with `NEXT_PUBLIC_API_URL` pointed at the shell's own bridge,
+then starts Electron. If the app is already listening, it is reused as-is.
 
-```bash
-npm start --workspace=@rutba/rutba-pos-desktop
-```
+Prerequisites, once each: the consumer API up (`api/core` on :4020 -
+`consumer\devkit\dev-start-core.bat` covers it), and Electron installed -
+[`..\native-build.bat`](../native-build.bat) does both the workspace install and
+the (first-run) Electron install.
 
 Requires Electron >= 28 (ESM main-process entry).
 
