@@ -5,3 +5,6 @@ out/
 .env.*
 !.env.example
 *.log
+
+# Agent scratch and per-machine settings.
+.ai/
