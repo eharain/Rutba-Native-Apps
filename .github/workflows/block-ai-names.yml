@@ -1,0 +1,196 @@
+name: Block AI Names
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  check-ai-names:
+    name: Reject AI model / org names
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run AI-name restriction check
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # ---------------------------------------------------------------------------
+          # Blocklist – AI model names, organisation names, and product names.
+          # Each entry is a case-insensitive ERE pattern (used with grep -iE).
+          # ---------------------------------------------------------------------------
+          BLOCKED_PATTERNS=(
+            # OpenAI / Microsoft
+            "openai"
+            "chatgpt"
+            "gpt-?[0-9]"
+            "gpt-?4[o]?"
+            "gpt-?3\.?5"
+            "o[0-9](-mini|-preview)?"
+            "dall-?e"
+            "whisper"
+            "codex"
+            "copilot"
+            "azure[ -]?openai"
+
+            # Anthropic
+            "anthropic"
+            "claude"
+
+            # Google / DeepMind
+            "google[ -]?deepmind"
+            "deepmind"
+            "gemini"
+            "bard"
+            "palm-?2?"
+            "lamda"
+            "imagen"
+
+            # Meta
+            "llama-?[0-9]?"
+            "meta[ -]?ai"
+
+            # Mistral
+            "mistral"
+            "mixtral"
+
+            # xAI / Grok
+            "xai"
+            "grok"
+
+            # Cohere
+            "cohere"
+            "command[ -]?r"
+
+            # Stability AI / image models
+            "stability[ -]?ai"
+            "stable[ -]?diffusion"
+
+            # Hugging Face
+            "huggingface"
+            "hugging[ -]?face"
+
+            # Amazon
+            "amazon[ -]?bedrock"
+            "amazon[ -]?titan"
+            "aws[ -]?bedrock"
+
+            # Nvidia
+            "nvidia[ -]?nemo"
+
+            # Inflection
+            "inflection[ -]?ai"
+            "pi[ -]?ai"
+
+            # Runway
+            "runway[ -]?ml"
+
+            # Midjourney
+            "midjourney"
+
+            # General terms
+            "co-?authored-?by:.*ai"
+            "co-?authored-?by:.*bot"
+            "co-?authored-?by:.*copilot"
+            "co-?authored-?by:.*claude"
+            "co-?authored-?by:.*chatgpt"
+            "co-?authored-?by:.*gemini"
+            "co-?authored-?by:.*gpt"
+            "co-?authored-?by:.*llama"
+          )
+
+          # Build a single combined pattern for grep
+          COMBINED=""
+          for p in "${BLOCKED_PATTERNS[@]}"; do
+            if [[ -z "$COMBINED" ]]; then
+              COMBINED="$p"
+            else
+              COMBINED="$COMBINED|$p"
+            fi
+          done
+
+          FAILED=0
+
+          # ---------------------------------------------------------------------------
+          # 1. Check commit messages (including Co-authored-by trailers)
+          # ---------------------------------------------------------------------------
+          echo "=== Checking commit messages ==="
+
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            # For a push event use the before/after SHAs
+            BASE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+          fi
+
+          # Collect commit messages for the range
+          if git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+            RANGE="${BASE_SHA}..${HEAD_SHA}"
+          else
+            # Initial push – check only the HEAD commit
+            RANGE="${HEAD_SHA}^..${HEAD_SHA}"
+          fi
+
+          while IFS= read -r line; do
+            if echo "$line" | grep -iEq "$COMBINED"; then
+              echo "::error::Blocked AI/model/org name found in commit message: $line"
+              FAILED=1
+            fi
+          done < <(git log --format="%B" "$RANGE" 2>/dev/null || true)
+
+          # ---------------------------------------------------------------------------
+          # 2. Check filenames of files changed in this push / PR
+          # ---------------------------------------------------------------------------
+          echo "=== Checking changed filenames ==="
+
+          while IFS= read -r fname; do
+            if echo "$fname" | grep -iEq "$COMBINED"; then
+              echo "::error::Blocked AI/model/org name found in filename: $fname"
+              FAILED=1
+            fi
+          done < <(git diff --name-only "$RANGE" 2>/dev/null || true)
+
+          # ---------------------------------------------------------------------------
+          # 3. Check all tracked filenames in the repository (full tree)
+          # ---------------------------------------------------------------------------
+          echo "=== Checking all tracked filenames ==="
+
+          while IFS= read -r fname; do
+            if echo "$fname" | grep -iEq "$COMBINED"; then
+              echo "::error::Blocked AI/model/org name found in tracked filename: $fname"
+              FAILED=1
+            fi
+          done < <(git ls-files)
+
+          # ---------------------------------------------------------------------------
+          # 4. Check author / committer identity fields in the commit range
+          # ---------------------------------------------------------------------------
+          echo "=== Checking author and committer names/emails ==="
+
+          while IFS= read -r identity; do
+            if echo "$identity" | grep -iEq "$COMBINED"; then
+              echo "::error::Blocked AI/model/org name found in author/committer identity: $identity"
+              FAILED=1
+            fi
+          done < <(git log --format="%an%n%ae%n%cn%n%ce" "$RANGE" 2>/dev/null || true)
+
+          # ---------------------------------------------------------------------------
+          # Result
+          # ---------------------------------------------------------------------------
+          if [[ "$FAILED" -eq 1 ]]; then
+            echo ""
+            echo "::error::One or more AI model / organisation names were detected."
+            echo "::error::Remove all AI model names, organisation names, co-author lines,"
+            echo "::error::and filenames that reference AI tools before pushing."
+            exit 1
+          fi
+
+          echo "✅ No blocked AI/model/org names detected."

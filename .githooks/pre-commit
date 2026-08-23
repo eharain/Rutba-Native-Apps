@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# pre-commit hook – blocks AI model / org names in staged filenames and commit
+# message co-author trailers.
+#
+# Install:
+#   git config core.hooksPath .githooks
+# or copy this file to .git/hooks/pre-commit and make it executable.
+
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# Blocklist (same as the GitHub Actions workflow – keep in sync)
+# ---------------------------------------------------------------------------
+COMBINED="openai|chatgpt|gpt-?[0-9]|gpt-?4[o]?|gpt-?3\.?5|o[0-9](-mini|-preview)?|dall-?e|whisper|codex|copilot|azure[ -]?openai|anthropic|claude|google[ -]?deepmind|deepmind|gemini|bard|palm-?2?|lamda|imagen|llama-?[0-9]?|meta[ -]?ai|mistral|mixtral|xai|grok|cohere|command[ -]?r|stability[ -]?ai|stable[ -]?diffusion|huggingface|hugging[ -]?face|amazon[ -]?bedrock|amazon[ -]?titan|aws[ -]?bedrock|nvidia[ -]?nemo|inflection[ -]?ai|pi[ -]?ai|runway[ -]?ml|midjourney|co-?authored-?by:.*ai|co-?authored-?by:.*bot|co-?authored-?by:.*copilot|co-?authored-?by:.*claude|co-?authored-?by:.*chatgpt|co-?authored-?by:.*gemini|co-?authored-?by:.*gpt|co-?authored-?by:.*llama"
+
+FAILED=0
+
+# 1. Staged filenames
+echo "Checking staged filenames for AI/model/org names…"
+while IFS= read -r fname; do
+  if echo "$fname" | grep -iEq "$COMBINED"; then
+    echo "ERROR: Blocked AI/model/org name in staged filename: $fname"
+    FAILED=1
+  fi
+done < <(git diff --cached --name-only)
+
+# 2. Commit message file (if prepare-commit-msg already wrote it)
+COMMIT_MSG_FILE="${GIT_DIR:-.git}/COMMIT_EDITMSG"
+if [[ -f "$COMMIT_MSG_FILE" ]]; then
+  echo "Checking commit message for AI/model/org names…"
+  while IFS= read -r line; do
+    if echo "$line" | grep -iEq "$COMBINED"; then
+      echo "ERROR: Blocked AI/model/org name in commit message: $line"
+      FAILED=1
+    fi
+  done < "$COMMIT_MSG_FILE"
+fi
+
+if [[ "$FAILED" -eq 1 ]]; then
+  echo ""
+  echo "Commit rejected. Remove all AI model names, organisation names,"
+  echo "co-author lines, and filenames that reference AI tools."
+  exit 1
+fi
+
+echo "✅ No blocked AI/model/org names detected."
+exit 0
