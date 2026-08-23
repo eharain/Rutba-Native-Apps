@@ -1,0 +1,16 @@
+{
+  "name": "rutba-native-apps",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Native desktop apps for the Rutba estate: one Electron shell per product (POS, Mail, Studio), the offline sync framework (@rutba/sync), and the offline/desktop program documentation.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "npm test --workspace=@rutba/sync"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
