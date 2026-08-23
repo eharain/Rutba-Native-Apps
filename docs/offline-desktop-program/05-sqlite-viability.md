@@ -29,9 +29,9 @@
 
 ## 1. What was run, and against what
 
-The SQLite driver from `claude/nostalgic-thompson-49a36b` is **already merged to
-`dev`** (commit `9505328`). This branch was fast-forwarded to `dev` (`80c8975`)
-rather than re-implementing anything.
+The SQLite driver work is **already merged to `dev`** (commit `9505328`). This
+branch was fast-forwarded to `dev` (`80c8975`) rather than re-implementing
+anything.
 
 Every run below used a scratch database outside the repo. No repo schema was
 modified - as scoped.

@@ -8,6 +8,7 @@
     "apps/*"
   ],
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks",
     "test": "npm test --workspace=@rutba/sync"
   },
   "engines": {
