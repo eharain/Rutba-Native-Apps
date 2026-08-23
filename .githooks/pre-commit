@@ -1,0 +1,63 @@
+#!/bin/sh
+# Blocks any staged file whose NAME or CONTENT carries an AI-provider
+# attribution - Claude, Anthropic, Copilot, ChatGPT, OpenAI/GPT, Cursor,
+# Codeium, Tabnine, Windsurf, Kimi, DeepSeek, Gemini, Codex - in any form:
+# file names, prose, comments, code, trailers.
+#
+# This is the content/file-name counterpart to commit-msg (which covers the
+# commit message) and pre-push (which re-checks history). Installed
+# machine-wide via `git config --global core.hooksPath`, and versioned in
+# each repo's .githooks/ so the protection travels with a clone.
+#
+# The only files allowed to carry these names are the guardrail files
+# themselves, which must name what they block:
+#   - .githooks/{pre-commit,commit-msg,pre-push}
+#   - AGENTS.md / RULES.md  (the generic contributor-rules docs that state
+#     this very policy - their .ai-rules.md history is grandfathered in)
+# A staged file under any other name containing a match is rejected.
+
+PATTERN='claude|anthropic|copilot|chatgpt|openai|gpt-[0-9]|cursor|codeium|tabnine|windsurf|kimi|deepseek|gemini|codex'
+ALLOW_RE='(^|/)\.githooks/|/(AGENTS|RULES)\.md$|/\.ai-rules\.md$|(^|/)(AGENTS|RULES)\.md$'
+
+bad=0
+report=""
+
+# Staged paths (added/copied/modified/renamed). -z for safety with spaces.
+while IFS= read -r -d '' path; do
+  [ -z "$path" ] && continue
+
+  # Allow-listed guardrail/policy files.
+  case "$path" in
+    *.githooks/*|AGENTS.md|RULES.md|.ai-rules.md|*/AGENTS.md|*/RULES.md|*/.ai-rules.md)
+      continue ;;
+  esac
+
+  # 1) File name / path carries a provider name?
+  if printf '%s' "$path" | grep -qiE "$PATTERN"; then
+    bad=1
+    report="$report\n  NAME: $path"
+  fi
+
+  # 2) Staged content (the blob, not the working tree) carries a provider name?
+  blob=$(git ls-files -s -- "$path" | awk '{print $2}')
+  [ -z "$blob" ] && continue
+  if git cat-file -p "$blob" 2>/dev/null | grep -qiE "$PATTERN"; then
+    bad=1
+    report="$report\n  CONTENT: $path"
+  fi
+done <<EOF
+$(git diff --cached --name-only --diff-filter=ACMR -z)
+EOF
+
+if [ "$bad" -eq 1 ]; then
+  echo "" >&2
+  echo "pre-commit hook: rejected - staged file(s) carry an AI-provider name in the file name or content:" >&2
+  printf "%b\n" "$report" >&2
+  echo "" >&2
+  echo "Rename the file / remove the reference. If the file legitimately documents this" >&2
+  echo "policy itself, it belongs in AGENTS.md / RULES.md or .githooks/, which are allow-listed." >&2
+  echo "" >&2
+  exit 1
+fi
+
+exit 0
