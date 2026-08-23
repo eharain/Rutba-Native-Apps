@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
-# pre-commit hook – blocks AI model / org names in staged filenames.
+# commit-msg hook – blocks AI model / org names in the commit message,
+# including Co-authored-by trailers.
 #
-# Commit message scanning is handled by the companion commit-msg hook.
+# Git passes the path to the commit message file as $1.
 #
 # Install:
 #   git config core.hooksPath .githooks
-# or copy this file to .git/hooks/pre-commit and make it executable.
+# or copy this file to .git/hooks/commit-msg and make it executable.
 
 set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
 
 # ---------------------------------------------------------------------------
 # Blocklist (same as the GitHub Actions workflow – keep in sync)
@@ -16,21 +19,22 @@ COMBINED="openai|chatgpt|gpt-?[0-9]|gpt-?4[o]?|gpt-?3\.?5|openai-o[0-9]|dall-?e|
 
 FAILED=0
 
-# 1. Staged filenames
-echo "Checking staged filenames for AI/model/org names…"
-while IFS= read -r fname; do
-  if echo "$fname" | grep -iEq "$COMBINED"; then
-    echo "ERROR: Blocked AI/model/org name in staged filename: $fname"
+echo "Checking commit message for AI/model/org names…"
+while IFS= read -r line; do
+  # Skip comment lines (lines starting with #)
+  [[ "$line" =~ ^# ]] && continue
+  if echo "$line" | grep -iEq "$COMBINED"; then
+    echo "ERROR: Blocked AI/model/org name in commit message: $line"
     FAILED=1
   fi
-done < <(git diff --cached --name-only)
+done < "$COMMIT_MSG_FILE"
 
 if [[ "$FAILED" -eq 1 ]]; then
   echo ""
   echo "Commit rejected. Remove all AI model names, organisation names,"
-  echo "and filenames that reference AI tools."
+  echo "and co-author lines that reference AI tools."
   exit 1
 fi
 
-echo "✅ No blocked AI/model/org names detected in staged filenames."
+echo "✅ No blocked AI/model/org names detected in commit message."
 exit 0

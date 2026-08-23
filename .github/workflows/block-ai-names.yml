@@ -32,9 +32,9 @@ jobs:
             "gpt-?[0-9]"
             "gpt-?4[o]?"
             "gpt-?3\.?5"
-            "o[0-9](-mini|-preview)?"
+            "openai-o[0-9]"
             "dall-?e"
-            "whisper"
+            "\bwhisper\b"
             "codex"
             "copilot"
             "azure[ -]?openai"
@@ -47,10 +47,10 @@ jobs:
             "google[ -]?deepmind"
             "deepmind"
             "gemini"
-            "bard"
+            "\bbard\b"
             "palm-?2?"
-            "lamda"
-            "imagen"
+            "lamda|lambda-?ai"
+            "\bimagen\b"
 
             # Meta
             "llama-?[0-9]?"
@@ -61,11 +61,11 @@ jobs:
             "mixtral"
 
             # xAI / Grok
-            "xai"
-            "grok"
+            "\bxai\b"
+            "\bgrok\b"
 
             # Cohere
-            "cohere"
+            "\bcohere\b"
             "command[ -]?r"
 
             # Stability AI / image models
