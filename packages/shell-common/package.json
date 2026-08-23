@@ -2,6 +2,7 @@
   "name": "@rutba/shell-common",
   "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "description": "Shared Electron shell machinery for the Rutba desktop apps: BrowserWindow lifecycle plus the sync bridge hosted in a UtilityProcess (docs/offline-pos-options.md §13.1).",
   "type": "module",
   "main": "./index.js",

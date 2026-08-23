@@ -67,3 +67,9 @@ UtilityProcess. Prerequisite: the consumer API up (`api/core` on :4020) —
 npm install
 npm test
 ```
+
+## License
+
+Dual-licensed under the GNU AGPL v3.0 (see [LICENSE](LICENSE)) and a
+separate commercial license — see [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md).
+Copyright (C) 2026 Tech Style Ltd — https://tech-style.co

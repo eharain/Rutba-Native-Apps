@@ -2,6 +2,7 @@
   "name": "@rutba/sync",
   "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "description": "The Rutba sync package: the offline sync-bridge (phase 1, pass-through proxy) and the contract-level replication engine that replaces strapi-content-sync-pro. One engine, four consumers - desktop replica, CMS promotion, instance-to-instance copy-over, tenant cloning.",
   "type": "module",
   "main": "./index.js",

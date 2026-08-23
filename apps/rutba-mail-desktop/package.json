@@ -2,6 +2,7 @@
   "name": "@rutba/rutba-mail-desktop",
   "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "description": "Windows desktop shell for Rutba Mail (consumer/content/apps/mail, dev port 4021). Electron host; sync bridge on loopback :4031.",
   "type": "module",
   "main": "main.js",

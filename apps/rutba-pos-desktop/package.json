@@ -2,6 +2,7 @@
   "name": "@rutba/rutba-pos-desktop",
   "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "description": "Windows desktop shell for the Rutba POS (consumer/sales/apps/pos, dev port 4002). Electron host; sync bridge on loopback :4030.",
   "type": "module",
   "main": "main.js",

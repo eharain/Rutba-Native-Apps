@@ -2,6 +2,7 @@
   "name": "rutba-native-apps",
   "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "description": "Native desktop apps for the Rutba estate: one Electron shell per product (POS, Mail, Studio), the offline sync framework (@rutba/sync), and the offline/desktop program documentation.",
   "workspaces": [
     "packages/*",
