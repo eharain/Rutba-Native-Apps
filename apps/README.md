@@ -8,9 +8,9 @@ the app.
 
 | Shell | Web app (consumer/) | App dev port | Bridge port |
 |---|---|---|---|
-| `pos-desktop` | `sales/apps/pos` | 4002 | 4030 |
-| `mail-desktop` | `content/apps/mail` | 4021 | 4031 |
-| `studio-desktop` | `content/apps/social` + `packages/video` | 4011 | 4032 |
+| `rutba-pos-desktop` | `sales/apps/pos` | 4002 | 4030 |
+| `rutba-mail-desktop` | `content/apps/mail` | 4021 | 4031 |
+| `rutba-studio-desktop` | `content/apps/social` + `packages/video` | 4011 | 4032 |
 
 Ports 4030-4032 are this repo's own band - deliberately outside the ERP's
 4000-4023 registry in `consumer/devkit/scripts/rutba_apps.sh`, because the
@@ -30,7 +30,7 @@ on its dev port with `NEXT_PUBLIC_API_URL` pointed at the bridge
 (`http://127.0.0.1:4030/api` for POS):
 
 ```bash
-npm start --workspace=@rutba/pos-desktop
+npm start --workspace=@rutba/rutba-pos-desktop
 ```
 
 Requires Electron >= 28 (ESM main-process entry).

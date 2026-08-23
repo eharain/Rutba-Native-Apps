@@ -1,5 +1,5 @@
 {
-  "name": "@rutba/pos-desktop",
+  "name": "@rutba/rutba-pos-desktop",
   "version": "0.1.0",
   "private": true,
   "description": "Windows desktop shell for the Rutba POS (consumer/sales/apps/pos, dev port 4002). Electron host; sync bridge on loopback :4030.",

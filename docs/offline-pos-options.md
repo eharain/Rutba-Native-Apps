@@ -13,7 +13,7 @@ _For roadmap [0.3 - Offline-first POS hardening](../../consumer/docs/todo/ROADMA
 >
 > This document, the offline-desktop program, and `packages/sync` moved from the
 > consumer repo into the new **`native-apps`** repo, and the desktop shells were
-> scaffolded there (`apps/pos-desktop`, `apps/mail-desktop`, `apps/studio-desktop`
+> scaffolded there (`apps/rutba-pos-desktop`, `apps/rutba-mail-desktop`, `apps/rutba-studio-desktop`
 > over a shared `@rutba/shell-common`). Two things follow:
 >
 > 1. **The program's decision 1 is superseded.** One "Rutba Desktop" container

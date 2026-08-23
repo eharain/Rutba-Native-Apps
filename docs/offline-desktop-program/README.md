@@ -116,7 +116,7 @@ Recorded here so no document below reopens them.
 
 | # | Decision | Where it was taken |
 |---|---|---|
-| 1 | ~~**One "Rutba Desktop" container hosting many apps**~~ **Superseded 2026-08-23: one Electron shell per product** (`apps/pos-desktop`, `apps/mail-desktop`, `apps/studio-desktop`) over a shared `@rutba/shell-common`. Each product ships its own installer; the bridge, replica and session stay per-shell. | This program; superseded at the move to native-apps |
+| 1 | ~~**One "Rutba Desktop" container hosting many apps**~~ **Superseded 2026-08-23: one Electron shell per product** (`apps/rutba-pos-desktop`, `apps/rutba-mail-desktop`, `apps/rutba-studio-desktop`) over a shared `@rutba/shell-common`. Each product ships its own installer; the bridge, replica and session stay per-shell. | This program; superseded at the move to native-apps |
 | 2 | **The desktop IS the launcher.** Reuse `getAppCatalogGroups` / `rankByUsage` / `appUsage.js` from `pos-shared`; the app list comes from the server-owned catalogue. | [admin-console 01](../../../consumer/consumer/docs/todo/admin-console-program/01-app-catalogue-entitlements.md) |
 | 3 | **v1 bundles POS, Mail and Studio only.** | [offline-pos-options §12](../offline-pos-options.md#12-amendment-2026-08-13--one-engine-three-apps) |
 | 4 | **The Electron main process hosts the bridge** - no separate Windows service. _(Superseded 2026-08-17: the bridge runs in a `UtilityProcess` inside the Electron app, not the main process - [§13.1](../offline-pos-options.md#131-the-engine-runs-in-a-utilityprocess-not-the-main-process); the installer/lifecycle argument stands.)_ | [offline-pos-options §11](../offline-pos-options.md#11-amendment-2026-08-13--electron-hosts-the-bridge) |

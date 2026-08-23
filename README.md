@@ -12,9 +12,9 @@ the nested-working-trees model used by the other tiers.
 | Path | What it is |
 |---|---|
 | `packages/sync` | **@rutba/sync** — the offline sync framework: the phase-1 pass-through bridge and the contract-level replication engine. Moved here from `consumer/packages/sync` on 2026-08-23. |
-| `apps/pos-desktop` | Electron shell for the POS (`consumer/sales/apps/pos`) |
-| `apps/mail-desktop` | Electron shell for Mail (`consumer/content/apps/mail`) |
-| `apps/studio-desktop` | Electron shell for Studio / social video tools (`consumer/content/apps/social` + `consumer/packages/video`) |
+| `apps/rutba-pos-desktop` | Electron shell for the POS (`consumer/sales/apps/pos`) |
+| `apps/rutba-mail-desktop` | Electron shell for Mail (`consumer/content/apps/mail`) |
+| `apps/rutba-studio-desktop` | Electron shell for Studio / social video tools (`consumer/content/apps/social` + `consumer/packages/video`) |
 | `docs/` | The offline/desktop program: [offline-pos-options.md](docs/offline-pos-options.md) and [offline-desktop-program/](docs/offline-desktop-program/), moved from `consumer/docs/todo/` on 2026-08-23. |
 
 ## Design lineage
@@ -29,7 +29,7 @@ alone.
 
 The program's original **decision 1** ("one Rutba Desktop container hosting many apps")
 was superseded on 2026-08-23: the estate ships **one Electron shell per product**
-(`pos-desktop`, `mail-desktop`, `studio-desktop`) over shared packages. See
+(`rutba-pos-desktop`, `rutba-mail-desktop`, `rutba-studio-desktop`) over shared packages. See
 [docs/offline-desktop-program/README.md](docs/offline-desktop-program/README.md) for the
 recorded amendment.
 

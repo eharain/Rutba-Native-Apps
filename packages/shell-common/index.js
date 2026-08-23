@@ -1,6 +1,6 @@
 // Shared Electron shell for the Rutba desktop apps.
 //
-// One shell per product (pos-desktop, mail-desktop, studio-desktop) - see the
+// One shell per product (rutba-pos-desktop, rutba-mail-desktop, rutba-studio-desktop) - see the
 // 2026-08-23 amendment in docs/offline-desktop-program/README.md, which
 // superseded the one-container decision. What the shells share lives here so
 // the per-app main.js stays three lines of configuration.
