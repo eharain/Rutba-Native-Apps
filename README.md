@@ -3,9 +3,11 @@
 Native desktop builds of the Rutba web apps, for Windows tills and workstations that
 must keep working when the internet does not.
 
-This repo is repo #8 in the estate map — see [REPOS.md](../REPOS.md) at the workspace
+This repo is repo #7 in the estate map — see [REPOS.md](../REPOS.md) at the workspace
 root. It is cloned into `native-apps/` and ignored by the root `rutba` repo, matching
-the nested-working-trees model used by the other tiers.
+the nested-working-trees model used by the other tiers. (It was #8 while
+`rutba-portal` was still counted separately; that tree belongs to
+`rutba-management` and the estate is seven repos.)
 
 ## What lives here
 
@@ -14,7 +16,7 @@ the nested-working-trees model used by the other tiers.
 | `packages/sync` | **@rutba/sync** — the offline sync framework: the phase-1 pass-through bridge and the contract-level replication engine. Moved here from `consumer/packages/sync` on 2026-08-23. |
 | `apps/rutba-pos-desktop` | Electron shell for the POS (`consumer/sales/apps/pos`) |
 | `apps/rutba-mail-desktop` | Electron shell for Mail (`consumer/content/apps/mail`) |
-| `apps/rutba-studio-desktop` | Electron shell for Studio / social video tools (`consumer/content/apps/social` + `consumer/packages/video`) |
+| `apps/rutba-studio-desktop` | Electron shell for Studio / social video tools (`consumer/content/apps/social` + `consumer/packages/video`, dev :4011) — **not** the standalone Studio app, see below |
 | `docs/` | The offline/desktop program: [offline-pos-options.md](docs/offline-pos-options.md) and [offline-desktop-program/](docs/offline-desktop-program/), moved from `consumer/docs/todo/` on 2026-08-23. |
 
 ## Design lineage
@@ -32,6 +34,15 @@ was superseded on 2026-08-23: the estate ships **one Electron shell per product*
 (`rutba-pos-desktop`, `rutba-mail-desktop`, `rutba-studio-desktop`) over shared packages. See
 [docs/offline-desktop-program/README.md](docs/offline-desktop-program/README.md) for the
 recorded amendment.
+
+## The studio shell targets the older surface
+
+`rutba-studio-desktop` shells the **social** app in the content group at :4011,
+which is what existed when it was written. Rutba Studio has since become an app
+of its own — `consumer/studio/apps/studio` at :4231, registered in the manifest
+and entitled by `social.studio`. The shell has not been repointed, and its
+`RUTBA_STUDIO_URL` default still reads `http://127.0.0.1:4011`. Recorded here so
+the name is not mistaken for the target.
 
 ## Status
 
