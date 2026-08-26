@@ -10,11 +10,19 @@ the app.
 |---|---|---|---|
 | `rutba-pos-desktop` | `sales/apps/pos` | 4002 | 4030 |
 | `rutba-mail-desktop` | `content/apps/mail` | 4021 | 4031 |
-| `rutba-studio-desktop` | `content/apps/social` + `packages/video` | 4011 | 4032 |
+| `rutba-studio-desktop` | `content/apps/social` + `packages/video` — **the social app, not the standalone Studio at :4231**; see the note below | 4011 | 4032 |
 
-Ports 4030-4032 are this repo's own band - deliberately outside the ERP's
-4000-4023 registry in `consumer/devkit/scripts/rutba_apps.sh`, because the
-bridges are never deployed services, same rule as the bridge's own README.
+Ports 4030-4032 are this repo's own band - deliberately outside the consumer
+line's 4000-4023 registry in `consumer/devkit/scripts/rutba_apps.sh`, because
+the bridges are never deployed services, same rule as the bridge's own README.
+
+**`rutba-studio-desktop` is named for a product it does not shell.** It points
+at `consumer/content/apps/social` on :4011, the video tools inside the content
+group. Rutba Studio became an application of its own during the August 2026
+extraction and runs at :4231 with its own editors, libraries and deck designer.
+Nothing has repointed the shell, and repointing it is not a one-line change -
+the two surfaces do not share a page. Recorded here so nobody assumes the
+desktop build carries what the Studio product page advertises.
 
 ## Dev loop
 

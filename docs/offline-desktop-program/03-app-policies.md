@@ -207,11 +207,16 @@ all.
       for - [§12](../offline-pos-options.md#12-amendment-2026-08-13--one-engine-three-apps)'s
       `reject` column.
 
-## Studio - `apps/content/social` (:4011)
+## Studio - `content/apps/social` (:4011) — the *social* video tools, not the standalone Studio app
 
 `content/apps/social/pages/posts/video-studio.js` plus
 [`packages/video`](../../../consumer/packages/video). Studio is the odd one out
 in the best way.
+
+**Which Studio this is.** The video tools inside the social app, not the Rutba
+Studio product that became its own application at :4231 in August 2026. The
+policies below were written against these pages and still describe them
+correctly; they say nothing about the standalone app.
 
 ### Rendering is already 100% local
 
