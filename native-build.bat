@@ -33,7 +33,7 @@ echo.
 echo  Electron already installed. Shells:
 echo    apps\rutba-pos-desktop\run.bat     (POS,    app :4002, bridge :4030)
 echo    apps\rutba-mail-desktop\run.bat    (Mail,   app :4021, bridge :4031)
-echo    apps\rutba-studio-desktop\run.bat  (Studio, app :4011, bridge :4032)
+echo    apps\rutba-studio-desktop\run.bat  (Studio, app :4231, bridge :4032)
 exit /b 0
 
 :electron

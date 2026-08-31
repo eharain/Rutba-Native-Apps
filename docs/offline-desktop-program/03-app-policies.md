@@ -43,7 +43,7 @@ read-after-write that follows every offline create.
 |---|---|---|---|---|---|
 | **POS** (`apps/sales/pos`) | ✓ | ✓ | stock items - the one search box that justifies the cost | sales, payments, stock consumption | Replay granularity - settled in [06](06-sync-back-granularity.md) |
 | **Mail** (`apps/content/mail`) | ✓ | ✓ | the local IMAP cache | sends, flags, moves | `uid` is only valid with `uidvalidity` |
-| **Studio** (`apps/content/social`) | ✓ | ✓ | posts + media library | recipe saves, queued publishes | Assets are large; the render is already local |
+| **Studio** (`studio/apps/studio`) | ✓ | ✓ | projects + media library | project saves, queued relay hand-offs | Assets are large; the render is already local |
 
 ## POS - `apps/sales/pos`
 
@@ -207,23 +207,34 @@ all.
       for - [§12](../offline-pos-options.md#12-amendment-2026-08-13--one-engine-three-apps)'s
       `reject` column.
 
-## Studio - `content/apps/social` (:4011) — the *social* video tools, not the standalone Studio app
+## Studio - `studio/apps/studio` (:4231)
 
-`content/apps/social/pages/posts/video-studio.js` plus
-[`packages/video`](../../../consumer/packages/video). Studio is the odd one out
-in the best way.
+[Rutba Studio](../../../consumer/studio/README.md): the editors, the managed
+libraries and the deck designer, over
+[`packages/editor-core`](../../../consumer/studio/packages/editor-core). Studio is
+the odd one out in the best way.
 
-**Which Studio this is.** The video tools inside the social app, not the Rutba
-Studio product that became its own application at :4231 in August 2026. The
-policies below were written against these pages and still describe them
-correctly; they say nothing about the standalone app.
+**Which Studio this is, and what changed.** These policies were first written
+against `content/apps/social/pages/posts/video-studio.js` plus
+[`consumer/packages/video`](../../../consumer/packages/video) - the video tooling
+inside Rutba Social, which is what `rutba-studio-desktop` shelled until
+2026-09-01. The shell now loads the standalone product, so this section was
+re-read against it. Most of it survives unchanged, because `editor-core` is the
+same renderer lifted out of the ERP and the capture dialog is the estate's one
+shared component. The two paragraphs where the app matters are marked below.
+
+The social video studio keeps every property described here; it simply has no
+desktop shell of its own, and `consumer/studio/EXTRACTION.md` records it as the
+surface being ported *into* Studio rather than the other way round.
 
 ### Rendering is already 100% local
 
-`@rutba/video` is browser-engine only - canvas → `captureStream()` →
-`MediaRecorder`, **no ffmpeg**. The heavy part of the workload never touched the
-network in the first place. What needs the network is **loading assets** and
-**saving the project**.
+`@rutba-studio/editor-core` is browser-engine only, zero dependencies - canvas →
+`captureStream()` → `MediaRecorder`, **no ffmpeg**. It is the same renderer
+`@rutba/video` is, lifted rather than rewritten, so this property did not change
+with the app. The heavy part of the workload never touched the network in the
+first place. What needs the network is **loading assets** and **saving the
+project**.
 
 So Studio's offline story is mostly a caching story, and its L2 is unusually cheap:
 
@@ -244,7 +255,15 @@ itself. In-browser capture is currently impossible on the LAN deploy box because
 `getUserMedia` is undefined at a plain-http LAN origin. The desktop's
 `http://127.0.0.1` origin is a secure context, so the recorder works.
 
-### Reproducibility: mostly fixed, and the desktop changes the residue
+Unchanged by the repoint, and if anything larger: the dividend is paid in
+`@rutba/ui/components/RecorderDialog`, the estate's one capture surface, and
+Studio has **two** doors onto it -
+[`components/editor/RecordBar.js`](../../../consumer/studio/apps/studio/components/editor/RecordBar.js)
+puts a take straight onto the creative at the playhead, and
+[`components/RecordButton.js`](../../../consumer/studio/apps/studio/components/RecordButton.js)
+records into a library. Both are dead on a LAN origin today.
+
+### Reproducibility: fixed in the social pages, and not a residue in Studio
 
 The editor plan recorded the original problem:
 
@@ -260,15 +279,24 @@ The editor plan recorded the original problem:
 > restores exactly this state"* and *"the poster reproduces this render"*
 > (line 737). Do not spec this as outstanding work.
 
-What remains in `localStorage` is the **last-used default for new posts**
-(`SETTINGS_KEY`, lines 252 and 257) plus pure UI chrome (`:guides`,
-`:railHidden`). On the desktop, "per-browser" becomes **"per-install"** - so two
-machines start a new post from different defaults and neither is wrong, with no
+What remains in social's `localStorage` is the **last-used default for new
+posts** (`SETTINGS_KEY`, lines 252 and 257) plus pure UI chrome (`:guides`,
+`:railHidden`). On a desktop host, "per-browser" would become **"per-install"** -
+two machines starting a new post from different defaults, neither wrong, with no
 way to tell from the post which happened.
 
-- [ ] Smaller than the original problem, same shape. Either promote the
-      new-post default to a server-side setting, or make it visible in the editor
-      so a diverging default is discoverable. Do not leave it silent.
+**This is the first paragraph the repoint changes, and it changes it to
+nothing.** The standalone Studio app writes no `localStorage` at all - not a
+default, not UI chrome - and its equivalent of the recipe is the project
+document on `studio_projects`, server-side by construction, which is also what
+the render worker resolves. So the residue this section was written to flag does
+not exist in the app the shell now hosts. It is still true of the social pages,
+and it is why the item below is kept rather than deleted.
+
+- [ ] Only if the social video studio is ever shelled: smaller than the original
+      problem, same shape. Either promote the new-post default to a server-side
+      setting, or make it visible in the editor so a diverging default is
+      discoverable. Do not leave it silent.
 - [ ] Renders produced offline are attributed to the install that produced them,
       so a divergent output is traceable to a machine rather than argued about.
 
@@ -282,6 +310,41 @@ way to tell from the post which happened.
 - [ ] Replayed renders are the **cheapest** conflict case in the program: a
       duplicated render wastes CPU, not money or trust. Do not spend D4 effort
       making them exactly-once.
+
+### The second paragraph the repoint changes: two paths the bridge never sees
+
+The refusal above assumed the publish leaves from the browser, because in the
+social app it does. In the standalone Studio it does not, and neither does the
+media fetch. Both run **in the app's own Next server process**:
+
+| Route | What it does | Why it is server-side |
+|---|---|---|
+| [`pages/api/relay/[action].js`](../../../consumer/studio/apps/studio/pages/api/relay/%5Baction%5D.js) | `POST /v1/posts` and `GET /v1/platforms` against the Social Relay | the relay API key is a tenant credential; anything the browser can read is public |
+| [`pages/api/media-proxy.js`](../../../consumer/studio/apps/studio/pages/api/media-proxy.js) | streams Media FileServer bytes back same-origin | a canvas that drew a cross-origin image is tainted and `captureStream()` throws |
+
+`NEXT_PUBLIC_API_URL` points the *browser* at the bridge. It does not move these,
+and nothing else does either - a request the app makes from its own server goes
+straight out. So:
+
+- [ ] The queue-the-intent refusal above has to be enforced **in the relay route**,
+      not only in shell chrome. A page that cannot reach the network still calls
+      this route, and the route is the thing that fails.
+- [ ] L1's "assets cached by URL" has to be a cache **the media proxy consults**,
+      not a bridge response cache, or the one collection this document singled
+      out as the cheapest to cache is the one the bridge cannot see.
+
+The third server route, [`pages/api/share/[token].js`](../../../consumer/studio/apps/studio/pages/api/share/%5Btoken%5D.js),
+is the exception that shows the rule: it resolves
+`API_URL || NEXT_PUBLIC_API_URL`, so under the shell it reaches the engine
+*through* the bridge - server process to loopback bridge - and gets L1 for free
+like any browser call. The other two resolve **different services**:
+`RELAY_API_URL` for the relay, `MEDIA_BASE_URL` for the bytes. That is why they
+escape, and it is a property of the upstream they name rather than of being
+server-side.
+
+The media proxy is the mixed case and worth reading closely: its allowlist and
+its foreign-track check both go through `NEXT_PUBLIC_API_URL`, so those cross the
+bridge, while the media bytes themselves do not.
 
 ## Adding a fourth app later
 

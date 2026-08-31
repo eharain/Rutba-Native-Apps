@@ -20,9 +20,9 @@ Electron main process (Node)
 ├== ONE @rutba/sync      proxy + cache + replicator + outbox + replayer
 ├== ONE services/core on SQLite  local reads answer the apps' real routes
 └== lazy per-app Next servers 127.0.0.1:<ephemeral>, started on first open
-    ├== apps/sales/pos      =┐
-    ├== apps/content/mail     ├= each is its own Next project → its own server
-    └== apps/content/social  =┘
+    ├== sales/apps/pos      =┐
+    ├== content/apps/mail     ├= each is its own Next project → its own server
+    └== studio/apps/studio  =┘
 ```
 
 **One bridge, one replica, one outbox - for all three apps.** That is the whole
@@ -163,9 +163,16 @@ the origin and only one of them is a browser:
       non-desktop build must be byte-identical, and the golden case to test is
       the production storefront split (`rutba.pk` page → `api.rutba.pk` API) that
       the hostname-swap bug broke once already.
-- [ ] Repoint [`apps/content/social/pages/api/media-proxy.js:38, 75`](../../../consumer/content/apps/social/pages/api/media-proxy.js),
-      the one file in the v1 set that reads `process.env.NEXT_PUBLIC_API_URL`
-      directly rather than through the resolver.
+- [ ] Repoint the files in the v1 set that read `process.env.NEXT_PUBLIC_API_URL`
+      directly rather than through the resolver. Since the studio shell was
+      repointed at `studio/apps/studio` on 2026-09-01 that is **three reads across
+      two files**, all of them `pages/api` routes:
+      [`media-proxy.js:107, 137`](../../../consumer/studio/apps/studio/pages/api/media-proxy.js)
+      (the host allowlist, and the foreign-track check) and
+      [`share/[token].js:27`](../../../consumer/studio/apps/studio/pages/api/share/%5Btoken%5D.js)
+      (behind an `API_URL` override). The social app's own
+      [`media-proxy.js`](../../../consumer/content/apps/social/pages/api/media-proxy.js)
+      has the same two reads and is no longer in the set.
 - [ ] Decide whether `IMAGE_URL` follows the bridge or stays pointed at the media
       file server. Media is large and immutable; routing it through the bridge
       buys little and costs throughput. Deriving it from `API_URL` (line 24,

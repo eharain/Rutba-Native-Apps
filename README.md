@@ -16,7 +16,7 @@ the nested-working-trees model used by the other tiers. (It was #8 while
 | `packages/sync` | **@rutba/sync** — the offline sync framework: the phase-1 pass-through bridge and the contract-level replication engine. Moved here from `consumer/packages/sync` on 2026-08-23. |
 | `apps/rutba-pos-desktop` | Electron shell for the POS (`consumer/sales/apps/pos`) |
 | `apps/rutba-mail-desktop` | Electron shell for Mail (`consumer/content/apps/mail`) |
-| `apps/rutba-studio-desktop` | Electron shell for Studio / social video tools (`consumer/content/apps/social` + `consumer/packages/video`, dev :4011) — **not** the standalone Studio app, see below |
+| `apps/rutba-studio-desktop` | Electron shell for Rutba Studio (`consumer/studio/apps/studio`, dev :4231) |
 | `docs/` | The offline/desktop program: [offline-pos-options.md](docs/offline-pos-options.md) and [offline-desktop-program/](docs/offline-desktop-program/), moved from `consumer/docs/todo/` on 2026-08-23. |
 
 ## Design lineage
@@ -35,14 +35,29 @@ was superseded on 2026-08-23: the estate ships **one Electron shell per product*
 [docs/offline-desktop-program/README.md](docs/offline-desktop-program/README.md) for the
 recorded amendment.
 
-## The studio shell targets the older surface
+## The studio shell now shells Studio
 
-`rutba-studio-desktop` shells the **social** app in the content group at :4011,
-which is what existed when it was written. Rutba Studio has since become an app
-of its own — `consumer/studio/apps/studio` at :4231, registered in the manifest
-and entitled by `social.studio`. The shell has not been repointed, and its
-`RUTBA_STUDIO_URL` default still reads `http://127.0.0.1:4011`. Recorded here so
-the name is not mistaken for the target.
+`rutba-studio-desktop` shelled the **social** app in the content group at :4011
+until 2026-09-01, which is what existed when it was written. Rutba Studio became
+an app of its own during the August 2026 extraction — `consumer/studio/apps/studio`
+at :4231, manifest key `studio`, entitled by `social.studio` — and the shell was
+repointed there, because a desktop build named for a product should carry that
+product. `RUTBA_STUDIO_URL` overrides the default, so the social surface is still
+reachable from this shell for anyone who wants it.
+
+The shell asks little of the app it hosts, which is what made the move cheap: a
+Next app on a loopback port whose `NEXT_PUBLIC_API_URL` points at the bridge, and
+the core engine on :4020 behind it. Studio meets that the same way Social does —
+the same `@rutba/api-client` descriptors, the same `@rutba/ui` auth context and
+`pages/auth/callback.js`, no server-rendered data fetch — and the studio module's
+`/api/v1/*` alias exists for exactly the `/api` base the bridge hands it.
+
+Two of Studio's outbound paths do **not** cross the bridge, and the offline
+program should not assume they do: `pages/api/media-proxy.js` and
+`pages/api/relay/[action].js` run in the app's own Node process, so bytes from
+the Media FileServer and the hand-off to the Social Relay leave the machine
+without the bridge ever seeing them. That is a scope note for bridge phases 2-4,
+not a blocker for the window.
 
 ## Status
 
@@ -58,7 +73,7 @@ the name is not mistaken for the target.
 native-build.bat                     :: install workspaces (+ Electron, first run)
 apps\rutba-pos-desktop\run.bat       :: POS shell:    web app :4002 + bridge :4030 + window
 apps\rutba-mail-desktop\run.bat      :: Mail shell:   web app :4021 + bridge :4031 + window
-apps\rutba-studio-desktop\run.bat    :: Studio shell: web app :4011 + bridge :4032 + window
+apps\rutba-studio-desktop\run.bat    :: Studio shell: web app :4231 + bridge :4032 + window
 ```
 
 Or from anywhere in the estate, the same convention as `dev.cmd` / `rutba.cmd`:

@@ -110,6 +110,30 @@ otherwise later.
 | `electron` references in any repo `package.json` | **0** |
 | video-maker A/B harness gates | **60** frame comparisons (5 looks × 12 stamps) + **6** sound checks |
 
+> **A correction worth recording (2026-09-01).** The v1 set's third member is now
+> **`studio/apps/studio`** (:4231), not `apps/content/social`. Decision 3 below
+> named Studio and the shell was named for Studio; it loaded the social app's
+> video tooling because that is what existed when it was written, and it was
+> repointed at the standalone product rather than renamed. The measurements above
+> are left as taken on 2026-08-13; two of them read differently against the new
+> member, and both are the same kind of read:
+>
+> - The **origin** row's "exactly one direct read of `NEXT_PUBLIC_API_URL`" is now
+>   three, across `studio/apps/studio`'s
+>   [`pages/api/media-proxy.js`](../../../consumer/studio/apps/studio/pages/api/media-proxy.js)
+>   (two) and
+>   [`pages/api/share/[token].js`](../../../consumer/studio/apps/studio/pages/api/share/%5Btoken%5D.js)
+>   (one, behind an `API_URL` override). Social's own media-proxy has grown from
+>   one read to two since the count was taken, so the seam has drifted on both
+>   sides of the swap.
+> - **`pages/api` routes in the v1 set: 4, all of them Studio's.** POS and Mail
+>   have none; the social app had one. Two of Studio's - the Social Relay hand-off
+>   and the media byte proxy - resolve upstreams that are not the engine, so the
+>   bridge never sees them.
+>   [03](03-app-policies.md#the-second-paragraph-the-repoint-changes-two-paths-the-bridge-never-sees)
+>   carries the detail. This is the one place the repoint made the program's job
+>   bigger rather than smaller, and it is worth knowing before D1.
+
 ## Decisions already taken
 
 Recorded here so no document below reopens them.

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
-  "description": "Windows desktop shell for Rutba Studio / social video tools (consumer/content/apps/social, dev port 4011). Electron host; sync bridge on loopback :4032.",
+  "description": "Windows desktop shell for Rutba Studio (consumer/studio/apps/studio, dev port 4231). Electron host; sync bridge on loopback :4032.",
   "type": "module",
   "main": "main.js",
   "scripts": {

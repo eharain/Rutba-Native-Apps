@@ -10,19 +10,28 @@ the app.
 |---|---|---|---|
 | `rutba-pos-desktop` | `sales/apps/pos` | 4002 | 4030 |
 | `rutba-mail-desktop` | `content/apps/mail` | 4021 | 4031 |
-| `rutba-studio-desktop` | `content/apps/social` + `packages/video` — **the social app, not the standalone Studio at :4231**; see the note below | 4011 | 4032 |
+| `rutba-studio-desktop` | `studio/apps/studio` | 4231 | 4032 |
 
-Ports 4030-4032 are this repo's own band - deliberately outside the consumer
-line's 4000-4023 registry in `consumer/devkit/scripts/rutba_apps.sh`, because
-the bridges are never deployed services, same rule as the bridge's own README.
+Ports 4030-4032 are this repo's own band - deliberately outside the app ports
+registered in `consumer/config/apps.manifest.json` and listed by
+`consumer/devkit/scripts/rutba_apps.sh`, because the bridges are never deployed
+services, same rule as the bridge's own README. (Those app ports are not one
+contiguous run: the ERP line sits in 4000-4023 and the standalone products have
+bands of their own, which is where Studio's 4231 comes from.)
 
-**`rutba-studio-desktop` is named for a product it does not shell.** It points
-at `consumer/content/apps/social` on :4011, the video tools inside the content
-group. Rutba Studio became an application of its own during the August 2026
-extraction and runs at :4231 with its own editors, libraries and deck designer.
-Nothing has repointed the shell, and repointing it is not a one-line change -
-the two surfaces do not share a page. Recorded here so nobody assumes the
-desktop build carries what the Studio product page advertises.
+**`rutba-studio-desktop` pointed at `content/apps/social` (:4011) until
+2026-09-01.** That was the video tooling inside Rutba Social - a feature of a
+different product (`erp.social`), not the product this shell is named for.
+Rutba Studio became an application of its own during the August 2026
+extraction: manifest key `studio`, unit `rutba_studio`, port 4231, entitled by
+`social.studio`, with its own editors, libraries and deck designer. The shell
+now loads it. `RUTBA_STUDIO_URL` still overrides the default, so the old
+surface is one environment variable away for anyone who wants it.
+
+The social video studio is not orphaned by this - it is still a shipping page
+of a shipping app, and `consumer/studio/EXTRACTION.md` records it as the thing
+being ported *into* Studio rather than the other way round. What it does not
+have is a desktop product of its own, and it never had one under this name.
 
 ## Dev loop
 
@@ -31,7 +40,7 @@ One click per shell:
 ```bat
 rutba-pos-desktop\run.bat     :: web app :4002 + bridge :4030 + window
 rutba-mail-desktop\run.bat    :: web app :4021 + bridge :4031 + window
-rutba-studio-desktop\run.bat  :: web app :4011 + bridge :4032 + window
+rutba-studio-desktop\run.bat  :: web app :4231 + bridge :4032 + window
 ```
 
 `run.bat` (via [`scripts\run-shell.bat`](scripts/run-shell.bat)) starts the web
