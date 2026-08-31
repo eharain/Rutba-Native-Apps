@@ -141,7 +141,7 @@ Recorded here so no document below reopens them.
 | # | Decision | Where it was taken |
 |---|---|---|
 | 1 | ~~**One "Rutba Desktop" container hosting many apps**~~ **Superseded 2026-08-23: one Electron shell per product** (`apps/rutba-pos-desktop`, `apps/rutba-mail-desktop`, `apps/rutba-studio-desktop`) over a shared `@rutba/shell-common`. Each product ships its own installer; the bridge, replica and session stay per-shell. | This program; superseded at the move to native-apps |
-| 2 | **The desktop IS the launcher.** Reuse `getAppCatalogGroups` / `rankByUsage` / `appUsage.js` from `pos-shared`; the app list comes from the server-owned catalogue. | [admin-console 01](../../../consumer/consumer/docs/todo/admin-console-program/01-app-catalogue-entitlements.md) |
+| 2 | **The desktop IS the launcher.** Reuse `getAppCatalogGroups` / `rankByUsage` / `appUsage.js` from `pos-shared`; the app list comes from the server-owned catalogue. | [admin-console 01](../../../consumer/docs/todo/admin-console-program/01-app-catalogue-entitlements.md) |
 | 3 | **v1 bundles POS, Mail and Studio only.** | [offline-pos-options §12](../offline-pos-options.md#12-amendment-2026-08-13--one-engine-three-apps) |
 | 4 | **The Electron main process hosts the bridge** - no separate Windows service. _(Superseded 2026-08-17: the bridge runs in a `UtilityProcess` inside the Electron app, not the main process - [§13.1](../offline-pos-options.md#131-the-engine-runs-in-a-utilityprocess-not-the-main-process); the installer/lifecycle argument stands.)_ | [offline-pos-options §11](../offline-pos-options.md#11-amendment-2026-08-13--electron-hosts-the-bridge) |
 | 5 | **Local reads come from `services/core` against SQLite**, never a second implementation of the domain. | [offline-pos-options §10.1](../offline-pos-options.md#101-shape), §6 |
@@ -172,7 +172,7 @@ explicitly out of scope for now. The four-layer model in
    is already a correct transactional outbox. The replayer is that shape - see
    [01 §The replayer is events.js](01-sync-core.md#the-replayer-is-eventsjs-in-a-different-costume).
 5. **Speak the wire contract, never the database.** Inherited verbatim from
-   [core-server-multitenancy 06](../../../consumer/consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md).
+   [core-server-multitenancy 06](../../../consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md).
    It is what lets one engine serve four consumers instead of four engines
    serving one each.
 6. **Coverage is measurable or it is not claimed.** "Is Mail offline-complete?"

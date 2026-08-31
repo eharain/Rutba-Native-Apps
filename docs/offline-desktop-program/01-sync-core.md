@@ -89,7 +89,7 @@ The delta-snapshot protocol from the reverted 0.3 build carries over
 
 - [ ] Cursor per collection on `updatedAt`, plus tombstones for deletes - the
       same two mechanisms the CMS sync engine needs
-      ([06 §Change detection](../../../consumer/consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md#replacement-services/core-content-sync-module-or-standalone-worker)).
+      ([06 §Change detection](../../../consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md#replacement-services/core-content-sync-module-or-standalone-worker)).
       Decide per collection in a manifest; do not invent a third scheme.
 - [ ] Backpressure: a replicator that saturates a 3G link during trading hours is
       a worse outage than the one it prevents.
@@ -195,7 +195,7 @@ app**, not written as `apps: ['sale']`. That is specced in
 This is not a desktop-only package, and saying so now is what stops it being
 built desktop-shaped.
 
-[`core-server-multitenancy-program/06`](../../../consumer/consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md)
+[`core-server-multitenancy-program/06`](../../../consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md)
 has already ruled that `strapi-content-sync-pro` must be **replaced by a
 contract-level sync engine** whose design principle is *"sync speaks the wire
 contract, never the database"* - so that any pairing works during and after the
@@ -204,9 +204,9 @@ strangler: Strapi↔Strapi, Strapi↔core, core↔core. That is the same engine.
 | Consumer | What it syncs | Where it is committed |
 |---|---|---|
 | **Desktop offline** | An app's reads and writes against a local replica | This program |
-| **CMS promotion** | CMS content between instances, replacing sync-pro | [06 §strapi-content-sync-pro](../../../consumer/consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md#strapi-content-sync-pro--replace-with-a-contract-level-sync-engine) |
+| **CMS promotion** | CMS content between instances, replacing sync-pro | [06 §strapi-content-sync-pro](../../../consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md#strapi-content-sync-pro--replace-with-a-contract-level-sync-engine) |
 | **LAN ↔ online instance** | A branch box's replica against the cloud origin | [offline-pos-options §6](../offline-pos-options.md#6-lan-mode), §11.2 |
-| **Per-tenant content promotion** | Golden/demo content into a fresh tenant; staging→production | [06 §Multitenancy bonus](../../../consumer/consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md#multitenancy-bonus) |
+| **Per-tenant content promotion** | Golden/demo content into a fresh tenant; staging→production | [06 §Multitenancy bonus](../../../consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md#multitenancy-bonus) |
 
 What each consumer configures differently: the manifest (which collections, which
 direction, which conflict policy), the identity scheme, and the transport
@@ -215,7 +215,7 @@ guarantee, or the rule that sync never touches the database directly.
 
 > Commerce copy-over (the `rutba` marketplace adapter + worker, identity via
 > `external_ids.rutba_origin`) is **already** contract-level and survives the
-> migration untouched - [06 §1](../../../consumer/consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md#strapi-content-sync-pro--replace-with-a-contract-level-sync-engine).
+> migration untouched - [06 §1](../../../consumer/docs/todo/core-server-multitenancy-program/06-plugin-replacement-map.md#strapi-content-sync-pro--replace-with-a-contract-level-sync-engine).
 > It is the proven pattern this engine generalizes, not a fifth consumer to build.
 
 ## Package boundary

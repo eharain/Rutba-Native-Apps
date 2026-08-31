@@ -69,7 +69,7 @@ Reuse, do not rebuild:
 | Reference implementation | [`NavAppSwitcher.js:39, 63`](../../../consumer/packages/ui/components/NavAppSwitcher.js) |
 
 The app list itself is **server-owned**, per
-[admin-console-program/01](../../../consumer/consumer/docs/todo/admin-console-program/01-app-catalogue-entitlements.md):
+[admin-console-program/01](../../../consumer/docs/todo/admin-console-program/01-app-catalogue-entitlements.md):
 the catalogue rides `/me/permissions`, with a public unauthenticated variant for
 pre-claim rendering. The desktop is a strong argument for that public variant -
 its launcher renders before any app window exists.

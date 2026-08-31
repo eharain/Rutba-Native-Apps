@@ -758,7 +758,7 @@ recorder to give.
   front of.
 - **Video Studio** - v3 (BUILT) is the
   everything-is-a-layer engine model; v4 and
-  [v5](./video-studio-v5-rail-plan.md) are the current work.
+  [v5](../../consumer/docs/todo/video-studio-v5-rail-plan.md) are the current work.
 - **The host itself** - the bridge lands inside the
   [core-server/multitenancy program](./core-server-multitenancy-program/), per §6 and
   §10.1: `services/core` run against local SQLite, not a fork of it.
