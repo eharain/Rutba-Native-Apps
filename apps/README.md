@@ -16,7 +16,7 @@ Ports 4030-4032 are this repo's own band - deliberately outside the app ports
 registered in `consumer/config/apps.manifest.json` and listed by
 `consumer/devkit/scripts/rutba_apps.sh`, because the bridges are never deployed
 services, same rule as the bridge's own README. (Those app ports are not one
-contiguous run: the ERP line sits in 4000-4023 and the standalone products have
+contiguous run: the consumer line sits in 4000-4023 and the standalone products have
 bands of their own, which is where Studio's 4231 comes from.)
 
 **`rutba-studio-desktop` pointed at `content/apps/social` (:4011) until

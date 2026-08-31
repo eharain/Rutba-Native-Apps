@@ -127,9 +127,9 @@ The distinction is not a technicality - it is what keeps the decision honest:
 | | Server-side `mail_message` row | Desktop IMAP cache |
 |---|---|---|
 | Created when | A human links or triages the message | The user opens a folder |
-| Lives in | The tenant database, backed up, shared, queryable across the ERP | One SQLite file, on one machine, in that install's `userData` |
-| Is it a mirror? | No - it is a deliberate import | Yes, and it is allowed to be, because it is not the ERP's data |
-| Privacy posture | Only business-relevant mail enters the ERP | Only what this user already read, on this user's own machine |
+| Lives in | The tenant database, backed up, shared, queryable across the suite | One SQLite file, on one machine, in that install's `userData` |
+| Is it a mirror? | No - it is a deliberate import | Yes, and it is allowed to be, because it is not the tenant database |
+| Privacy posture | Only business-relevant mail enters the tenant database | Only what this user already read, on this user's own machine |
 | Reachable by | Timelines, CRM, helpdesk, reports | This install's Mail window |
 
 The desktop cache is L1/L2 storage, not a content type. It must never be written
@@ -220,7 +220,7 @@ against `content/apps/social/pages/posts/video-studio.js` plus
 inside Rutba Social, which is what `rutba-studio-desktop` shelled until
 2026-09-01. The shell now loads the standalone product, so this section was
 re-read against it. Most of it survives unchanged, because `editor-core` is the
-same renderer lifted out of the ERP and the capture dialog is the estate's one
+same renderer lifted out of the consumer monorepo and the capture dialog is the estate's one
 shared component. The two paragraphs where the app matters are marked below.
 
 The social video studio keeps every property described here; it simply has no

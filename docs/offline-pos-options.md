@@ -387,7 +387,7 @@ shop with no link at all - only the owner's phone in the evening - that last mod
 the difference between usable and not. Neither A nor B can offer it.
 
 It is also independently sellable: *"works without internet"* is a far easier first
-sale in PK than a full ERP, and it fails independently of the main backend.
+sale in PK than a full business suite, and it fails independently of the main backend.
 
 ### 9.4 What it costs
 
