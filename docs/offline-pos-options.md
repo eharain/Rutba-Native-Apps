@@ -294,7 +294,7 @@ answer *because* there are two hosts sharing one implementation:
 **Build it from `services/core`, not from scratch.** `services/core` is already a standalone
 Node server speaking this API against this schema with a zero-copy compat layer. A
 branch-local tier is "run services/core against local SQLite with a sync channel", which
-lands inside the [core-server/multitenancy program](./core-server-multitenancy-program/)
+lands inside the [core-server/multitenancy program](../../consumer/docs/todo/core-server-multitenancy-program/README.md)
 rather than forking away from it.
 
 ---
@@ -752,16 +752,17 @@ recorder to give.
 **Cross-references.**
 
 - **POS** - this document; roadmap [0.3](../../consumer/docs/todo/ROADMAP.md).
-- **Email** - [`email-program/`](./email-program/), from
-  [00-overview-and-roadmap](./email-program/00-overview-and-roadmap.md); the
-  [IMAP gateway](./email-program/02-imap-gateway.md) is what a replica would sit in
-  front of.
-- **Video Studio** - v3 (BUILT) is the
-  everything-is-a-layer engine model; v4 and
-  [v5](../../consumer/docs/todo/video-studio-v5-rail-plan.md) are the current work.
+- **Email** - the `email-program/` folder these three links pointed at was deleted on
+  2026-09-01 (rutba-suite `43d2c2fb`) when the programme finished. Its live successors are
+  [`content/apps/mail/README.md`](../../consumer/content/apps/mail/README.md) and
+  [`mail/OUTSTANDING.md`](../../consumer/mail/OUTSTANDING.md) §1; the IMAP gateway a replica
+  would sit in front of is [`mail/apps/gateway`](../../consumer/mail/apps/gateway).
+- **Video Studio** - v3 (BUILT) is the everything-is-a-layer engine model; the v5 rail plan
+  shipped and its invariants moved into the app
+  ([`studio/PLAN.md`](../../consumer/studio/PLAN.md)).
 - **The host itself** - the bridge lands inside the
-  [core-server/multitenancy program](./core-server-multitenancy-program/), per §6 and
-  §10.1: `services/core` run against local SQLite, not a fork of it.
+  [core-server/multitenancy program](../../consumer/docs/todo/core-server-multitenancy-program/README.md),
+  per §6 and §10.1: `services/core` run against local SQLite, not a fork of it.
 
 This section implies no sequencing. POS is first and stays the proving ground. The value
 of writing it down now is that phases 1-3 should not bake in assumptions that make the

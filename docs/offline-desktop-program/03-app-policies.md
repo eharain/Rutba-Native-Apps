@@ -110,7 +110,10 @@ The email program took a deliberate architecture decision, and it is load-bearin
 > mailboxes. […] A message becomes a database row **only when it is linked** to
 > something - a person, contact, order, ticket, or a shared-inbox triage action.
 > The mail server stays the source of truth […].
-> - [`email-program/00-overview-and-roadmap.md`](../../../consumer/docs/todo/email-program/00-overview-and-roadmap.md), the ADR
+> - the ADR that said this. `docs/todo/email-program/` was deleted in rutba-suite on
+>   2026-09-01 (`43d2c2fb`) once the programme finished; what survives of it lives beside the
+>   code, in [`content/apps/mail/README.md`](../../../consumer/content/apps/mail/README.md) and
+>   [`mail/OUTSTANDING.md`](../../../consumer/mail/OUTSTANDING.md) §1.
 
 The same rule is written into the schema itself:
 [`mail-message`'s own `info.description`](../../../consumer/api/legacy/strapi/src/api/mail-message/content-types/mail-message/schema.json)

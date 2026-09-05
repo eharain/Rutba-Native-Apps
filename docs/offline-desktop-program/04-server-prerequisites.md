@@ -111,7 +111,9 @@ shape, and one driver package.
 - [ ] Add `sqlite: 'better-sqlite3'` to `clientMap`, branch the connection shape,
       force `pool: { min: 1, max: 1 }`.
 - [ ] Run the **golden contract test suite**
-      ([core-server-multitenancy 01](../../../consumer/docs/todo/core-server-multitenancy-program/01-contracts-freeze.md))
+      (the contracts freeze; its sheet went with the programme's reduction to two files on
+      2026-09-01, and the [programme README](../../../consumer/docs/todo/core-server-multitenancy-program/README.md)
+      is what is left)
       against SQLite and treat every diff as a bug in the adapter, not as an
       acceptable difference. A replica that answers a slightly different shape
       than the upstream is a dual-mode bug wearing a disguise - precisely what
