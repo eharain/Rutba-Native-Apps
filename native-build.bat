@@ -26,8 +26,8 @@ if errorlevel 1 exit /b 1
 if /i "%~1"=="electron" goto :electron
 if not exist node_modules\electron\dist\electron.exe (
     echo.
-    echo  Electron not installed yet - installing (first run only) ...
-    goto :electron
+    echo  Electron binary not downloaded yet - downloading, first run only ...
+    goto :binary
 )
 echo.
 echo  Electron already installed. Shells:
@@ -41,6 +41,17 @@ call npm install -D electron --no-audit --no-fund
 if errorlevel 1 (
     echo.
     echo  Electron install failed. Retry: native-build.bat electron
+    exit /b 1
+)
+
+:binary
+REM Since Electron 42 the npm package has no postinstall download: the binary
+REM arrives on first launch, or now through install-electron (a no-op once
+REM dist\ holds the installed version). run-shell.bat needs it on disk.
+call npx --no install-electron
+if errorlevel 1 (
+    echo.
+    echo  Electron download failed. Retry: native-build.bat electron
     exit /b 1
 )
 echo.
